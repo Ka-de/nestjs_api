@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  nestjs_api:
+    image: nestjs_api
+    container_name: nestjs_api
+    build:
+      dockerfile: Dockerfile
+      context: .
+      target: development
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: sh /app/start.sh
+    depends_on:
+      - nestjs_db
+      - nestjs_cache
+    links:
+      - nestjs_db
+    ports:
+      - ${PORT}:${PORT}
+    env_file:
+      - .env
+      
+  nestjs_db:
+    image: mongo
+    container_name: nestjs_db
+    ports:
+      - ${MONGO_PORT}:${MONGO_PORT}
+
+  nestjs_cache:
+    image: redis:5-alpine
+    container_name: nestjs_cache
+    command: /bin/sh -c "redis-server --requirepass $$REDIS_PASSWORD"
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
+    env_file:
+      - .env

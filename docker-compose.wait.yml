@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+      
+  nestjs_db:
+    image: mongo
+    container_name: nestjs_db
+    command: --replSet nestjs_rs --bind_ip_all --port 27017
+    ports:
+      - ${MONGO_PORT}:${MONGO_PORT}
+    volumes:
+      - ./scripts:/docker-entrypoint-initdb.d/ 
+  
+  nestjs_cache:
+    image: redis:5-alpine
+    container_name: nestjs_cache
+    command: /bin/sh -c "redis-server --requirepass $$REDIS_PASSWORD"
+    ports:
+      - 6379:6379
+    env_file:
+      - .env

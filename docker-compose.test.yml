@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+  nestjs_api:
+    image: nestjs_api
+    container_name: nestjs_api
+    build:
+      dockerfile: Dockerfile
+      context: .
+      target: development
+    command: sh /app/start.sh
+    depends_on:
+      - nestjs_db
+      - nestjs_cache
+    ports:
+      - 8081:8081
+    environment:
+      DATABASE_URI: mongodb://nestjs_db:27017
+      DATABASE_NAME: nestjs
+      NODE_ENV: test
+      MONGO_PORT: 27017
+      PORT: 8081
+      REDIS_HOST: nestjs_cache
+      REDIS_PORT: 6379
+      CACHE_TTL: 3600
+      DEFAULT_EMAIL: ikekatochukwu@gmail.com
+      PAGE_LIMIT: 20
+      MAIL_USER: ikekatochukwu@gmail.com
+      MAIL_PASSWORD: xntzoshmhirpmwzw
+      MAIL_FROM: noreply@example.com
+      SECRET: qw34er5t656&&^**&2
+      REQUEST_LIMIT: 3
+  
+  nestjs_db:
+    image: mongo
+    container_name: nestjs_db
+    ports:
+      - 27017:27017
+
+  nestjs_cache:
+    image: redis:5-alpine
+    container_name: nestjs_cache
+    ports:
+      - 6379:6379
+      
