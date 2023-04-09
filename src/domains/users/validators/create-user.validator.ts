@@ -1,4 +1,5 @@
 import * as Joi from 'joi';
+import { AccessRights } from '../../../shared/access.right';
 const phoneRegex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,7}$/m;
 
 export const CreateUserValidator = Joi.object({
@@ -7,5 +8,6 @@ export const CreateUserValidator = Joi.object({
     return new Error('"phone" must be a valid phone number')
   }),
   firstname: Joi.string().required(),
-  lastname: Joi.string().required()
+  lastname: Joi.string().required(),
+  right: Joi.array().valid(...Object.values(AccessRights)),
 });

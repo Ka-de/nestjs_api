@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { ApiProperty } from "@nestjs/swagger";
 import { AccessRights } from "../../../shared/access.right";
 import { v4 as uuidv4 } from 'uuid';
+import { Wallet } from "../../wallets/dto/wallet";
 
 @Schema({ timestamps: true, versionKey: false })
 export class User {
@@ -37,6 +38,10 @@ export class User {
   @ApiProperty({ description: 'The user deletion flag' })
   @Prop({ default: false })
   hidden?: boolean;
+
+  @ApiProperty({ description: 'The user wallet', type: Wallet })
+  @Prop({ type: { main: Number }, default: { main: 0 } })
+  wallet: Wallet;
 
   @ApiProperty({ description: 'The user creation date' })
   createdAt: Date;
